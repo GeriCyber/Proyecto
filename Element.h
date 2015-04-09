@@ -13,19 +13,19 @@ class Element
 		list<string> attrList;
 		string innerHTML;
 	public:
-	    Element();
-		Element(string tn);												// Crea un elemento
-		Element(string tn, list<string> l);
-		Element(string tn, list<string> l, string inner);
-		Element(list<string> l, string inner);
+	    Element();														// Constructor por defecto
+		Element(string tn);												// Crea un elemento (recibe TAGNAME)
+		Element(string tn, list<string> l);								// Crea un elemento (recibe TAGNAME y ATTRLIST)
+		Element(string tn, list<string> l, string inner);				// Crea un elemento (recibe TAGNAME, ATTRLIST y INNERHTML)
+		Element(list<string> l, string inner);							// Crea un elemento (recibe TAGNAME y INNERHTML)
 		Element(const Element &e);										// Constructor copia
-		// Sobrecarga del operador =
+		Element &operator=(const Element &e);							// Sobrecarga del operador =
 		string get_tagName();											// Devuelve el nombre del elemento
 		list<string> attributeList();									// Devuelve la lista de atributos del elemento
 		string get_innerHTML();											// Devuelve el texto guardado en el nodo
-		void set_tagNAme(const string tn);									// Cambia el nombre del elemento
-		void setAttributeList(const list<string> L);							// Cambia la lista de atributos del elemento
-		void setInnerHTML(const string ihtml);								// Cambia el texto guardado en el elemento
+		void set_tagNAme(const string tn);								// Cambia el nombre del elemento
+		void setAttributeList(const list<string> L);					// Cambia la lista de atributos del elemento
+		void setInnerHTML(const string ihtml);							// Cambia el texto guardado en el elemento
 		//~Element();
 };
 //======================================================================
@@ -66,6 +66,17 @@ Element::Element(const Element &e)
 	tagName = e.tagName;
 	attrList = e.attrList;
 	innerHTML = e.innerHTML;
+}
+//======================================================================
+Element &Element::operator=(const Element &e)
+{
+   if(this != &e)
+   {  
+		tagName = e.tagName;
+		attrList = e.attrList;
+		innerHTML = e.innerHTML;
+   }
+   return *this;
 }
 //======================================================================
 string Element::get_tagName()
