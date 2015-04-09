@@ -15,11 +15,11 @@ class Node
 		Node(Element elmt, Node *fc, Node *ns); 						// Constructor con element y apuntador hijo y hermano
 		Node(Element elmt);												// Constructor con element 
 		Node(const Node &n);											// Constructor copia
-		// Sobrecarga del operador =
+		Node &operator=(const Node &n);									// Sobrecarga del operador =
 		Element getElement() const;										// Devuelve el elemento almacenado en el nodo
 		Node* getFirstChild() const;									// Devuelve el apuntador a su primer hijo
 		Node* getNextSibling() const;									// Devuelve el apuntador a su hermano derecho
-		void setElement(const Element &elmt);							// Modifica el elemento almacenado en el nodo
+		void setElement(Element elmt);									// Modifica el elemento almacenado en el nodo
 		void setFirstChild(Node *firstChild);							// Modifica el apuntador a su primer hijo
 		void setNextSibling(Node *nextSibling);							// Modifica el apuntador a su hermano derecho
 };
@@ -45,6 +45,17 @@ Node::Node(const Node &n)
 	nextSibling = n.nextSibling;
 }
 //======================================================================
+Node &Node::operator=(const Node &n)
+{
+	if(this != &n)
+	{
+		e = n.e;
+		firstChild = n.firstChild;
+		nextSibling = n.nextSibling;
+	}
+	return(*this);
+}	
+//======================================================================
 Element Node::getElement() const
 {
 	return e;
@@ -60,6 +71,11 @@ Node* Node::getNextSibling() const
 	return (nextSibling);
 }
 //======================================================================
+void Node::setElement(Element elmt)
+{
+	e = elmt;
+}
+//======================================================================
 void Node::setFirstChild(Node *firstChild)
 {
 	this -> firstChild = firstChild; 
@@ -70,3 +86,4 @@ void Node::setNextSibling(Node *nextSibling)
 	this -> nextSibling = nextSibling; 
 }
 #endif	
+
