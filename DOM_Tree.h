@@ -14,7 +14,6 @@ class DOM_Tree
 		Node* copyNodes(Node *ptrNodo);									// Copia los nodos del arbol
 		void destroyNodes(Node *ptrNodo);								// Destruye los nodos del arbol
 		Node* construir(string s);										// Crea y retorna un nuevo nodo (recibe STRING)
-		//Element construir_raiz(string &s);								// Construye el elemento la raiz y lo retorna
 		Node* buscar_getElementByID(string s, Node *p);					// Busca el nodo con el ID dado
 	public:
 		DOM_Tree();														// Constructor por defecto
@@ -32,7 +31,7 @@ class DOM_Tree
 		void removeChild(int p);										// Elimina el hijo de la posición p del arbol.
 		void replaceChild(int p, DOM_Tree Arbol);						// Cambia el subarbol de la posición p por otro subarbol dado
 		void replaceChild(int p, string s);								// Cambia el subarbol de la posición p por un strind dado
-		DOM_Tree getElement(string s);									// Devuelve el subarbol cuya raiz es el element que tenga el ID dado	
+		DOM_Tree getElementByID(string s);									// Devuelve el subarbol cuya raiz es el element que tenga el ID dado	
 		~DOM_Tree();													// Destructor
 		friend ostream& operator << (ostream &out,const DOM_Tree &A)		// Sobrecarga del operador <<
 		{
@@ -113,7 +112,7 @@ Node* DOM_Tree::construir(string s) //revisar metodo
 {
 	Node *nuevo;
 	string aux, cadena, nner,aux1,atri;
-	int m,i=0, cont=0;
+	int m,i=0, cont=0,j;
 	Element e;
 	list<string> L;
 	
@@ -130,51 +129,39 @@ Node* DOM_Tree::construir(string s) //revisar metodo
 			if(aux == "doctype html")
 			{
 				aux = "document";
-				//cout << "taganme:" << aux << endl;
 				e.set_tagNAme(aux);
-				///cout << "tagname:" << e.get_tagName() << endl;
 				s.erase(s.begin(),s.begin()+n+1);
-				//nuevo = new Node(e);
-				//cout << "Recursion 1" << endl;
 				cadena = s;
 				m = s.length();
 				s.erase(s.begin(),s.begin()+m);
-				/*if(s.empty())
-				{
-					cout << "s es vacia" << endl;
-				}*/
 			}
 			else
 			{
-				size_t j = s.find(" ");
-				if(j != string::npos)
-				{
-					if(j < n)
+				//cout << "Entro" << endl;
+				/*size_t*/ j = s.find(" ");
+				//cout << j << endl;
+				
+					//cout << "Entro" << endl;
+					if(j < n && j >= 0)
 					{
 						aux = s.substr(1, j-1); // tagname
-						//cout << "Tagname1:" << aux << endl;
 						e.set_tagNAme(aux);
-						///cout << "tagname:" << e.get_tagName() << endl;
 						s.erase(s.begin(),s.begin()+j+1);
-						//cout << " S" << s << endl;
 					}
 					else
 					{
+						
 						aux = s.substr(1,n-1);
-						//cout << "Tagname2:" << aux << endl;
 						e.set_tagNAme(aux);		//tagname
-						///cout << "tagname:" << e.get_tagName() << endl;
 						s.erase(s.begin(), s.begin()+n);
-						//cout << "S1" << s << endl;
 					}
-					
+						
 					if(s[0] != '>')
 					{
 						n = s.find(">");
 						if(n != string::npos)
 						{
 							aux1 = s.substr(0,n);
-							///cout << "atributo:" << aux1 << endl;
 							s.erase(s.begin(), s.begin()+n+1);
 							m = aux1.length(); // m= longitud de los atributos 
 							while(i <= m)
@@ -195,13 +182,11 @@ Node* DOM_Tree::construir(string s) //revisar metodo
 									if(n != string::npos)
 									{
 										atri = aux1.substr(0,n-1);
-										///cout << "atributo:" << atri << endl;
 										L.push_back(atri);
 										aux1.erase(aux1.begin(), aux1.begin()+n+1);
 									}
 									i++;
 								}
-								///cout << "atributo:" << aux1 << endl;
 								L.push_back(aux1);
 							}
 							else
@@ -214,7 +199,6 @@ Node* DOM_Tree::construir(string s) //revisar metodo
 					else
 					{
 						s.erase(s.begin());
-
 					}
 					
 					if(s[0] == '<') //verifica si tiene inner
@@ -230,14 +214,11 @@ Node* DOM_Tree::construir(string s) //revisar metodo
 						else
 						{
 							n = s.find(aux);
-							//cout << aux << endl;
 							if(n != string::npos)
 							{
 								cadena = s.substr(0, n-2);
-								//cout << "Hijo:" << cadena << endl;
 								m = aux.length();
 								s.erase(s.begin(),s.begin()+n+m+1);
-								//cout << "S1" << s << endl;
 							}
 						}
 					}
@@ -246,39 +227,24 @@ Node* DOM_Tree::construir(string s) //revisar metodo
 						n = s.find("<");
 						if(n != string::npos)
 						{
-							//validar con npos
 							nner = s.substr(0,n);
-							s.erase(s.begin(),s.begin()+n+1);	//n
-							//cout << "Inner:" << nner << endl;
+							s.erase(s.begin(),s.begin()+n+1);
 							e.setInnerHTML(nner);
-							///cout << "Inner:" << e.get_innerHTML() << endl;
 							j = s.find(">");
-							//cout << j << endl;
-							if(j != string::npos)
+							
+							if(j != -1)
 							{
 								s.erase(s.begin(), s.begin()+j);
 								s.erase(s.begin());
-								//cout << "s:" << s << endl;
 							}
 						}
 					}
-				}
 			}
-			/*if(!s.empty())
-			{
-				cout << "Hermano: " << s << endl;
-			}
-			if(!cadena.empty())
-			{
-				cout << "Hijo: " << cadena << endl;
-			}*/
-			nuevo = new Node(e);
 		}
-		//cout << "Recursion 2 " << endl;
+		nuevo = new Node(e);
 		nuevo -> setFirstChild(construir(cadena));
-		//cout << "Recursion 3" << endl;
 		nuevo -> setNextSibling(construir(s));
-		//cout << "paso" << endl;	
+		
 		
 	}
 	return nuevo;
@@ -446,83 +412,20 @@ void DOM_Tree::appendChild(const DOM_Tree Arbol)
 void DOM_Tree::appendChild(string s)
 {
 	DOM_Tree A;
-	Node *act, *ant;
-	string aux;
-	
 	if(!s.empty())
 	{
-		//A.nodoRaiz -> setElement(construir_raiz(s));
-		//A.nodoRaiz -> setFirstChild(construir(s));        // Enlaza el nodo raiz con su hijo izquierdo 
 		A.construir_publico(s);
-		cout << "salio" << endl;
-		act = nodoRaiz -> getFirstChild();
-		if(act == NULL)
-		{
-			A.nodoRaiz -> setFirstChild(copyNodes(A.nodoRaiz));
-		}
-		else
-		{
-			ant = act;
-			while(act != NULL)
-			{
-				ant = act;
-				act = act ->getFirstChild();
-			}
-			ant -> setNextSibling(copyNodes(A.nodoRaiz));
-			ant -> getNextSibling() -> setNextSibling(NULL);
-		}
+		appendChild(A);
 	}
 }
 //======================================================================
 void DOM_Tree::appendChild(int p, string s)
 {
-	Node *aux, *ant;
-	int i,longi=1;
 	DOM_Tree A;
-	
 	if(!s.empty())
 	{
-		//A.nodoRaiz -> setElement(construir_raiz(s));
-		A.nodoRaiz -> setFirstChild(construir(s));
-	
-		if(p == 1)
-		{
-			aux = nodoRaiz -> getFirstChild();
-			nodoRaiz -> setFirstChild(copyNodes(A.nodoRaiz));
-			nodoRaiz -> getFirstChild() -> setNextSibling(aux);
-		}
-		else
-		{
-			aux -> getFirstChild();
-			ant = aux;
-			while(aux != NULL)
-			{
-				ant = aux;
-				aux -> getNextSibling();
-				longi++;
-			}
-		
-			if(p == longi + 1)
-			{
-				ant -> setNextSibling(copyNodes(A.nodoRaiz));
-				ant -> getNextSibling() -> setNextSibling(NULL);
-			}
-			else
-			{
-				ant = nodoRaiz ->getFirstChild();
-				aux = ant -> getNextSibling();
-				for (i = 2; i < p; i++)
-				{
-					ant = aux;
-					aux = aux -> getNextSibling();
-				}
-				if(i == p)
-				{
-					ant -> setNextSibling(copyNodes(A.nodoRaiz));
-					ant -> getNextSibling() -> setNextSibling(aux);
-				}	
-			}	
-		}
+		A.construir_publico(s);
+		appendChild(p,A);
 	}
 }
 //======================================================================
@@ -621,14 +524,17 @@ Node* DOM_Tree::buscar_getElementByID(string s, Node *p)
 	
 	if(p != NULL)
 	{
-		if(!p ->getElement().attributeList().empty())
+		cout << "Tagname:" << p -> getElement().get_tagName() << endl;
+		if(!p -> getElement().attributeList().empty())
 		{
+			//cout << "hola" << endl;
 			list<string> L;
 			L = p -> getElement().attributeList();
 			
 			while(!L.empty() && !located)
 			{
 				cadena=L.front();
+				cout << "atributo:" << cadena << endl;
 				L.pop_front();
 				if(cadena[0] == 'i' && cadena[1] == 'd')
 				{
@@ -636,26 +542,33 @@ Node* DOM_Tree::buscar_getElementByID(string s, Node *p)
 					if(cadena == s)
 					{
 						located=true;
+						cout << cadena << endl;
 					}
 				}
 			}
+			if(located)
+			{
+				cout << "Retorna" << endl;
+				return p;
+			}
 		}
-		if(located)
-		{
-			return p;
-		}
-		else
-		{
-			buscar_getElementByID(s,p->getFirstChild());
-			buscar_getElementByID(s,p->getNextSibling());
-		}
+		cout << "RECURSION HIJO" << endl;
+		buscar_getElementByID(s,p->getFirstChild());
+		cout << "RECURSION HERMANO" << endl;
+		buscar_getElementByID(s,p->getNextSibling());
+	}
+	else
+	{
+		cout << "Retorna NULO" << endl;
+		return NULL;
 	}
 }
 //======================================================================
-DOM_Tree DOM_Tree::getElement(string s)
+DOM_Tree DOM_Tree::getElementByID(string s)
 {
 	DOM_Tree A;
-	A.nodoRaiz=copyNodes(buscar_getElementByID(s,nodoRaiz));
+	A.nodoRaiz=buscar_getElementByID(s,nodoRaiz);
+	cout << "salio" << endl;
 	return (A);
 }
 //======================================================================
