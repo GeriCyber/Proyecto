@@ -8,17 +8,17 @@ class Node
 {
 	private:
 		Element e;
-		Node *firstChild;
-		Node *nextSibling;
+		Node *first;
+		Node *next;
 	public:
-		Node(): e(Element()), firstChild(NULL), nextSibling(NULL) {}	// Constructor por defecto
+		Node(): e(Element()), first(NULL), next(NULL) {}	// Constructor por defecto
 		Node(Element elmt, Node *fc, Node *ns); 						// Constructor con element y apuntador hijo y hermano
 		Node(Element elmt);												// Constructor con element 
 		Node(const Node &n);											// Constructor copia
 		Node &operator=(const Node &n);									// Sobrecarga del operador =
-		Element getElement() const;										// Devuelve el elemento almacenado en el nodo
-		Node* getFirstChild() const;									// Devuelve el apuntador a su primer hijo
-		Node* getNextSibling() const;									// Devuelve el apuntador a su hermano derecho
+		Element element() const;										// Devuelve el elemento almacenado en el nodo
+		Node* firstChild() const;									// Devuelve el apuntador a su primer hijo
+		Node* nextSibling() const;									// Devuelve el apuntador a su hermano derecho
 		void setElement(Element elmt);									// Modifica el elemento almacenado en el nodo
 		void setFirstChild(Node *firstChild);							// Modifica el apuntador a su primer hijo
 		void setNextSibling(Node *nextSibling);							// Modifica el apuntador a su hermano derecho
@@ -27,22 +27,22 @@ class Node
  Node::Node(Element elmt, Node *fc, Node *ns)
 {
 	e = elmt;
-	firstChild = fc;
-	nextSibling = ns;
+	first = fc;
+	next = ns;
 }
 //======================================================================
 Node::Node(Element elmt)
 {
 	e = elmt;
-	firstChild = NULL;
-	nextSibling = NULL;
+	first = NULL;
+	next = NULL;
 }
 //======================================================================
 Node::Node(const Node &n)
 {
 	e = n.e;
-	firstChild = n.firstChild;
-	nextSibling = n.nextSibling;
+	first = n.first;
+	next = n.next;
 }
 //======================================================================
 Node &Node::operator=(const Node &n)
@@ -50,25 +50,25 @@ Node &Node::operator=(const Node &n)
 	if(this != &n)
 	{
 		e = n.e;
-		firstChild = n.firstChild;
-		nextSibling = n.nextSibling;
+		first = n.first;
+		next = n.next;
 	}
 	return(*this);
 }	
 //======================================================================
-Element Node::getElement() const
+Element Node::element() const
 {
 	return e;
 }
 //======================================================================
-Node* Node::getFirstChild() const
+Node* Node::firstChild() const
 {
-	return (firstChild);
+	return (first);
 }
 //======================================================================
-Node* Node::getNextSibling() const
+Node* Node::nextSibling() const
 {
-	return (nextSibling);
+	return (next);
 }
 //======================================================================
 void Node::setElement(Element elmt)
@@ -78,12 +78,11 @@ void Node::setElement(Element elmt)
 //======================================================================
 void Node::setFirstChild(Node *firstChild)
 {
-	this -> firstChild = firstChild; 
+	this -> first = firstChild; 
 }
 //======================================================================
 void Node::setNextSibling(Node *nextSibling)
 {
-	this -> nextSibling = nextSibling; 
+	this -> next = nextSibling; 
 }
 #endif	
-
